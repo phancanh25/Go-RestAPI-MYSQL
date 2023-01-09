@@ -34,6 +34,7 @@ const (
 type ApplicationContext struct {
 	HealthHandler *health.Handler
 	UserHandler   *handler.UserHandler
+	MovieHandler  *handler.MovieHandler
 }
 
 func NewApp(ctx context.Context, config Config) (*ApplicationContext, error) {
@@ -66,11 +67,15 @@ func NewApp(ctx context.Context, config Config) (*ApplicationContext, error) {
 	userService := service.NewUserService(db)
 	userHandler := handler.NewUserHandler(userService)
 
+	movieService := service.NewMovieService(db)
+	movieHandler := handler.NewMovieHandler(movieService)
+
 	sqlChecker := s.NewHealthChecker(db)
 	healthHandler := health.NewHandler(sqlChecker)
 
 	return &ApplicationContext{
 		HealthHandler: healthHandler,
 		UserHandler:   userHandler,
+		MovieHandler:  movieHandler,
 	}, nil
 }
